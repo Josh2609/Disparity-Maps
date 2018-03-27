@@ -4,8 +4,14 @@ rng('default');
 addpath('./images');
 
 % Load images
-left_image = imread('images/testL.jpg');
-right_image = imread('images/testR.jpg');
+%left_image = imread('images/testL.jpg');
+%right_image = imread('images/testR.jpg');
+
+left_image = imread('images/pentagon_left.bmp');
+right_image = imread('images/pentagon_right.bmp');
+
+%left_image = imread('images/scene_l.bmp');
+%right_image = imread('images/scene_r.bmp');
 
 % Check if images are greyscale and if not, convert them.
 if size(left_image,3) == 3
@@ -38,13 +44,18 @@ supportWindowCount = searchWindowLengthX * searchWindowLengthY;
 for ref_x = 1 + searchWindowSize(1) + supportWindowSize(1) : size(left_image, 1) - searchWindowSize(1) - supportWindowSize(1)
     for ref_y = 1 + searchWindowSize(2) + supportWindowSize(2) : size(left_image, 2) - searchWindowSize(2) - supportWindowSize(2)
         
+        if (ref_x == 9 && ref_y ==9)
+           disp("oho"); 
+        end
+        
         % matrix to hold the aggregated values from each support window
         support_aggregates = zeros(searchWindowLengthX, searchWindowLengthY);
         
         %populate reference support window with image pixel intensities
-        support_ref = left_image(...
+        %convert to single to allow negative values
+        support_ref = single(left_image(...
             ref_x - supportWindowSize(1) : ref_x + supportWindowSize(1), ...
-            ref_y - supportWindowSize(2) : ref_y + supportWindowSize(2));
+            ref_y - supportWindowSize(2) : ref_y + supportWindowSize(2)));
         
         for search_x_n = 1:searchWindowLengthX
             for search_y_n = 1:searchWindowLengthY
@@ -54,9 +65,9 @@ for ref_x = 1 + searchWindowSize(1) + supportWindowSize(1) : size(left_image, 1)
                 search_y = ref_y - searchWindowSize(2) + search_y_n - 1;
                 
                 %populate support windows with image pixel intensities
-                support_right = right_image(...
+                support_right = single(right_image(...
                     search_x - supportWindowSize(1) : search_x + supportWindowSize(1), ...
-                    search_y - supportWindowSize(2) : search_y + supportWindowSize(2));
+                    search_y - supportWindowSize(2) : search_y + supportWindowSize(2)));
                 
                 %Sum of Absolute Differences
                 aggregate = sum(sum(abs(support_ref - support_right)));
@@ -70,8 +81,10 @@ for ref_x = 1 + searchWindowSize(1) + supportWindowSize(1) : size(left_image, 1)
         [minimum,ycoord] = min(min(support_aggregates));
         xcoord = xcoords(ycoord);
         
-        % manhattan distance from the corresponding point in the reference image
-        disparity = abs(searchWindowMiddleX - xcoord) + abs(searchWindowMiddleX - ycoord);
+        % distance from the corresponding point in the reference image
+        relativePosition = [(searchWindowMiddleX - xcoord) (searchWindowMiddleY - ycoord)];
+        positions = [relativePosition; 0 0];
+        disparity = pdist(positions, 'euclidean');
         
         disparityMap(ref_x, ref_y) = disparity;
         
@@ -81,6 +94,7 @@ end
 figure;
 imagesc(disparityMap);
 colormap(gray);
+colorbar
 hold on;
 
 figure;
