@@ -51,12 +51,6 @@ for ref_x = 1 + searchWindowSize(1) + supportWindowSize(1) : size(left_image, 1)
         % matrix to hold the aggregated values from each support window
         support_aggregates = zeros(searchWindowLengthX, searchWindowLengthY);
         
-        %populate reference support window with image pixel intensities
-        %convert to single to allow negative values
-        support_ref = single(left_image(...
-            ref_x - supportWindowSize(1) : ref_x + supportWindowSize(1), ...
-            ref_y - supportWindowSize(2) : ref_y + supportWindowSize(2)));
-        
         for search_x_n = 1:searchWindowLengthX
             for search_y_n = 1:searchWindowLengthY
                 
@@ -65,12 +59,24 @@ for ref_x = 1 + searchWindowSize(1) + supportWindowSize(1) : size(left_image, 1)
                 search_y = ref_y - searchWindowSize(2) + search_y_n - 1;
                 
                 %populate support windows with image pixel intensities
+                %convert to single to allow negative values
+                support_ref = single(left_image(...
+                    ref_x - supportWindowSize(1) : ref_x + supportWindowSize(1), ...
+                    ref_y - supportWindowSize(2) : ref_y + supportWindowSize(2)));
+
                 support_right = single(right_image(...
                     search_x - supportWindowSize(1) : search_x + supportWindowSize(1), ...
                     search_y - supportWindowSize(2) : search_y + supportWindowSize(2)));
                 
                 %Sum of Absolute Differences
-                aggregate = sum(sum(abs(support_ref - support_right)));
+                %aggregate = sum(sum(abs(support_ref - support_right)));
+                
+                %Normalised Sum of Squared Differences
+                mean_ref = mean(mean(support_ref));
+                mean_right = mean(mean(support_right));
+                support_right = support_right - mean_right;
+                support_ref = support_ref - mean_ref;
+                aggregate = sum(sum((support_ref - support_right).^2));
                 
                 support_aggregates(search_x_n, search_y_n) = aggregate;
             end
