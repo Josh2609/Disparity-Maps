@@ -20,6 +20,7 @@ for search_x_n = 1:searchWindowLengthX
 
         %populate support windows with image pixel intensities
         %convert to single to allow negative values
+        %recalculate reference support window since it might be changed
         support_ref = single(left_image(...
             ref_x - supportWindowSize(1) : ref_x + supportWindowSize(1), ...
             ref_y - supportWindowSize(2) : ref_y + supportWindowSize(2)));
