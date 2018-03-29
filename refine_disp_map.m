@@ -1,14 +1,16 @@
 function disp_map = refine_disp_map(unrefined_disp_map, x_start, x_end, y_start, y_end)
 
 % define max iterations in case it never converges or it takes too long
-max_iter = 4;
+max_iter = 3;
 iter = 0;
 
 changed = 1;
 
 disp_map = unrefined_disp_map;
 
-while (iter <= max_iter && changed == 1)
+while (iter < max_iter && changed == 1)
+    
+    tic
     
     %update list of potential classifications
     disp_levels = unique(disp_map);
@@ -47,6 +49,8 @@ while (iter <= max_iter && changed == 1)
     iter = iter + 1;
     if (disp_map == disp_map_next) changed = 0; else changed = 1; end
     disp_map = disp_map_next;
+    
+    toc
 end
 
 end
@@ -59,22 +63,20 @@ if (x == 1) x_begin = x; end
 x_end = x + 1;
 if (x == size(disp_map, 1)) x_end = x; end
 
-x_indices = (x_begin:x_end ~= x);
-
 y_begin = y - 1;
 if (y == 1) y_begin = y; end
 y_end = y + 1;
 if (y == size(disp_map, 1)) y_end = x; end
 
-y_indices = (y_begin:y_end ~= y);
-
 %neighbour_disps = disp_map(x_indices,y_indices);
 %neighbour_disps = disp_map(x_begin:x_end,y_begin:y_end);
-neighbour_disps = [];
+neighbour_disps = zeros((x_end-x_begin)*(y_end-y_begin)-1, 1);
+count = 1;
 for x_i=x_begin:x_end
     for y_i=y_begin:y_end
         if ~(x_i == x && y_i == y)
-            neighbour_disps = [neighbour_disps; disp_map(x_i,y_i)];
+            neighbour_disps(count) = disp_map(x_i,y_i);
+            count = count + 1;
         end
     end
 end

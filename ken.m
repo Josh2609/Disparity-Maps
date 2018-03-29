@@ -6,14 +6,15 @@ addpath('./images');
 support_cmp_name = 'support_cmp_sad';
 
 % Load images
-%left_image = imread('images/testL.jpg');
-%right_image = imread('images/testR.jpg');
+% left_image = imread('images/testL.jpg');
+% right_image = imread('images/testR.jpg');
 
 % left_image = imread('images/pentagon_left.bmp');
 % right_image = imread('images/pentagon_right.bmp');
 
 left_image = imread('images/scene_l.bmp');
 right_image = imread('images/scene_r.bmp');
+
 %right_image = imread('images/scene_l.bmp');
 
 % left_image = imread('images/test2.png');
@@ -67,22 +68,4 @@ parfor ref_x = xLowerLimit : xUpperLimit
 end
 toc
 
-disp("refining");
-
-refined_disp_map = refine_disp_map(disp_map);
-
-figure;
-imshow(left_image);
-hold on;
-
-figure;
-imagesc(disp_map);
-colormap(gray);
-colorbar
-hold on;
-
-figure;
-imagesc(refined_disp_map);
-colormap(gray);
-colorbar
-hold on;
+refine;
