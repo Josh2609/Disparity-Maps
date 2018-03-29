@@ -1,9 +1,7 @@
-function disp_map = refine_disp_map(unrefined_disp_map, x_start, x_end, y_start, y_end)
+function disp_map = refine_disp_map(max_iter, unrefined_disp_map, x_start, x_end, y_start, y_end)
 
 % define max iterations in case it never converges or it takes too long
-max_iter = 3;
 iter = 0;
-
 changed = 1;
 
 disp_map = unrefined_disp_map;
@@ -12,7 +10,7 @@ while (iter < max_iter && changed == 1)
     
     tic
     
-    %update list of potential classifications
+    %update list of potential classifications (disparity levels)
     disp_levels = unique(disp_map);
     
     %store output values in a different map

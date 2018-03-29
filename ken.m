@@ -1,5 +1,3 @@
-rng('default');
-
 addpath('./images');
 
 % Specify comparison method

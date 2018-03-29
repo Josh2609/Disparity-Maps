@@ -1,4 +1,4 @@
-refined_disp_map = refine_disp_map(disp_map, xLowerLimit, xUpperLimit, yLowerLimit, yUpperLimit);
+refined_disp_map = refine_disp_map(3, disp_map, xLowerLimit, xUpperLimit, yLowerLimit, yUpperLimit);
 
 figure;
 imshow(left_image);

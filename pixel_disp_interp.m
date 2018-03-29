@@ -78,7 +78,9 @@ for search_x_n = 0:num_values_x-1
                 count = count+1;
             end
         end
-                
+        
+        support_right = zeros(size(support_ref, 1), size(support_ref, 2));
+        
         for sup_x = 0:supportWindowLengthX-1
             for sup_y = 0:supportWindowLengthY-1
                 
