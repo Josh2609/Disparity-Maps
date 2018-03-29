@@ -32,10 +32,8 @@ disparityMap = zeros(size(left_image, 1), size(left_image, 2));
 
 % The sizes below are in one direction only - the true window size is 
 % (double the specified number + 1).
-% searchWindowSize = [5 5];
-% supportWindowSize = [2 2];
-searchWindowSize = [2 2];
-supportWindowSize = [1 1];
+searchWindowSize = [5 5];
+supportWindowSize = [2 2];
 
 searchWindowLengthX = 2*searchWindowSize(1) + 1;
 searchWindowLengthY = 2*searchWindowSize(2) + 1;

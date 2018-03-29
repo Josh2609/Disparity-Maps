@@ -34,14 +34,6 @@ support_aggregates = zeros(searchWindowLengthX, searchWindowLengthY);
 
 for search_x_n = 0:num_values_x-1
     for search_y_n = 0:num_values_y-1
-        
-        if (ref_y == 377 && search_y_n == num_values_x-1)
-            disp("oho");
-        end
-        
-        if (search_x_n == num_values_y-1)
-            %disp("oho2");
-        end
             
         %convert from 1..windowLength to image coordinates
         search_x = ref_x - searchWindowSize(1) + search_x_n * slide_length;
