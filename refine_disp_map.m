@@ -8,7 +8,6 @@ disp_map = unrefined_disp_map;
 
 while (iter < max_iter && changed == 1)
     
-    tic
     
     %update list of potential classifications (disparity levels)
     disp_levels = unique(disp_map);
@@ -48,7 +47,7 @@ while (iter < max_iter && changed == 1)
     if (disp_map == disp_map_next) changed = 0; else changed = 1; end
     disp_map = disp_map_next;
     
-    toc
+    
 end
 
 end

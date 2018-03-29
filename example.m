@@ -1,7 +1,7 @@
 addpath('./images');
 
 % Specify comparison method
-support_cmp_name = 'support_cmp_sad';
+support_cmp_name = 'support_cmp_meanct';
 
 % Load images
 left_image = load_image_gs('images/scene_l.bmp');
@@ -13,7 +13,7 @@ search_size_y = 2;
 support_size_x = 4;
 support_size_y = 4;
 
-refinement_max_iter = 3;
+refinement_max_iter = 0;
 
 % compute disparity map
 [disp_map, time, xLowerLimit, xUpperLimit, yLowerLimit, yUpperLimit] ...
