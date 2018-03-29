@@ -22,7 +22,7 @@ function varargout = DisparityGUI(varargin)
 
 % Edit the above text to modify the response to help DisparityGUI
 
-% Last Modified by GUIDE v2.5 28-Mar-2018 18:45:45
+% Last Modified by GUIDE v2.5 29-Mar-2018 22:11:38
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -61,11 +61,17 @@ guidata(hObject, handles);
 % UIWAIT makes DisparityGUI wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
-global suppX suppY searchX searchY
+global suppX suppY searchX searchY left_file_path right_file_path support_cmp slide_length refinement refinement_iterations
+refinement_iterations = 3;
 suppX = 2;
 suppY = 2;
 searchX = 10;
 searchY = 10;
+slide_length = 1;
+%left_file_path = 'images/testL.jpg';
+%right_file_path = 'images/testR.jpg';
+support_cmp = 'support_cmp_sad';
+refinement = 1;
 
 
 % --- Outputs from this function are returned to the command line.
@@ -80,56 +86,20 @@ varargout{1} = handles.output;
 
 
 
-
-% --- Executes on button press in option1.
-function option1_Callback(hObject, eventdata, handles)
-% hObject    handle to option1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of option1
-
-
-% --- Executes on button press in option2.
-function option2_Callback(hObject, eventdata, handles)
-% hObject    handle to option2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of option2
-
-
-% --- Executes on button press in option3.
-function option3_Callback(hObject, eventdata, handles)
-% hObject    handle to option3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of option3
-
-
-% --- Executes on button press in option4.
-function option4_Callback(hObject, eventdata, handles)
-% hObject    handle to option4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of option4
-
-
 % --- Executes on button press in StartButton.
 function StartButton_Callback(hObject, eventdata, handles)
 % hObject    handle to StartButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global left_file_path right_file_path suppX suppY searchX searchY
-disp("suppX: " + suppX + " | suppY: " + suppY); 
-[dm] = DisparityCalc(left_file_path, right_file_path, suppX, suppY, searchX, searchY);
+global support_cmp left_file_path right_file_path suppX suppY searchX searchY slide_length refinement refinement_iterations
+
+dm = DisparityCalc(slide_length, support_cmp, left_file_path, right_file_path, suppX, suppY, searchX, searchY, refinement, refinement_iterations);
 axes(handles.axes3);
 imagesc(dm);
 colormap(gray);
 colorbar
 hold on;
+clear;
 
 
 
@@ -263,6 +233,132 @@ suppY = str2double(get(hObject,'String'));
 % --- Executes during object creation, after setting all properties.
 function suppY_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to suppY (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in selectSAD.
+function selectSAD_Callback(hObject, eventdata, handles)
+% hObject    handle to selectSAD (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of selectSAD
+global support_cmp
+support_cmp = 'support_cmp_sad';
+
+
+% --- Executes on button press in selectSSD.
+function selectSSD_Callback(hObject, eventdata, handles)
+% hObject    handle to selectSSD (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of selectSSD
+global support_cmp
+support_cmp = 'support_cmp_ssd';
+
+% --- Executes on button press in selectSSD.
+function selectNSSD_Callback(hObject, eventdata, handles)
+% hObject    handle to selectSSD (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of selectSSD
+global support_cmp
+support_cmp = 'support_cmp_nssd';
+
+
+% --- Executes on selection change in slideLengthSel.
+function slideLengthSel_Callback(hObject, eventdata, handles)
+% hObject    handle to slideLengthSel (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global slide_length
+contents = cellstr(get(hObject,'String'));
+slide_length = str2num(contents{(get(hObject,'Value'))});
+
+
+% --- Executes during object creation, after setting all properties.
+function slideLengthSel_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slideLengthSel (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in refinementOn.
+function refinementOn_Callback(hObject, eventdata, handles)
+% hObject    handle to refinementOn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global refinement
+refinement = 1;
+set(handles.RefineIteration, 'enable', 'on')
+
+
+% --- Executes on button press in refinementOff.
+function refinementOff_Callback(hObject, eventdata, handles)
+% hObject    handle to refinementOff (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global refinement
+refinement = 0;
+set(handles.RefineIteration, 'enable', 'off')
+
+
+
+
+function RefineIteration_Callback(hObject, eventdata, handles)
+% hObject    handle to RefineIteration (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global refinement_iterations
+if(str2double(get(hObject,'String')) >= 1)
+    refinement_iterations = str2double(get(hObject,'String'));
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function RefineIteration_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to RefineIteration (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in togglebutton1.
+function togglebutton1_Callback(hObject, eventdata, handles)
+% hObject    handle to togglebutton1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of togglebutton1
+
+
+
+function edit12_Callback(hObject, eventdata, handles)
+% hObject    handle to edit12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit12 as text
+%        str2double(get(hObject,'String')) returns contents of edit12 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit12_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit12 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
