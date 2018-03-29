@@ -1,7 +1,22 @@
 function [match_coords, minimum, disparity] = pixel_disp_interp(slide_length, ref_x, ref_y, searchWindowSize, supportWindowSize, left_image, right_image, support_cmp_name)
 
-searchWindowLengthX = floor ((2*searchWindowSize(1) + 1)/slide_length);
-searchWindowLengthY = floor ((2*searchWindowSize(2) + 1)/slide_length);
+%use the non-interpolated version if the slide_length is 1
+if (slide_length == 1)
+            [match_coords, minimum, disparity] = pixel_disp(ref_x, ref_y,...
+           searchWindowSize, supportWindowSize,...
+           left_image, right_image,...
+           support_cmp_name);
+       return
+end
+
+%searchWindowLengthX = floor ((2*searchWindowSize(1) + 1)/slide_length);
+%searchWindowLengthY = floor ((2*searchWindowSize(2) + 1)/slide_length);
+
+searchWindowLengthX = 2*searchWindowSize(1) + 1;
+searchWindowLengthY = 2*searchWindowSize(2) + 1;
+
+num_values_x = (1/slide_length)*(searchWindowLengthX - 1) + 1;
+num_values_y = (1/slide_length)*(searchWindowLengthY - 1) + 1;
 
 searchWindowMiddleX = ceil(searchWindowLengthX/2);
 searchWindowMiddleY = ceil(searchWindowLengthY/2);
@@ -9,14 +24,25 @@ searchWindowMiddleY = ceil(searchWindowLengthY/2);
 supportWindowLengthX = 2*supportWindowSize(1) + 1;
 supportWindowLengthY = 2*supportWindowSize(2) + 1;
 
+supportWindowMiddleX = ceil(supportWindowLengthX/2);
+supportWindowMiddleY = ceil(supportWindowLengthY/2);
+
 support_cmp_handle = str2func(support_cmp_name);
 
 % matrix to hold the aggregated values from each support window
 support_aggregates = zeros(searchWindowLengthX, searchWindowLengthY);
 
-for search_x_n = 0:searchWindowLengthX-1
-    for search_y_n = 0:searchWindowLengthY-1
-
+for search_x_n = 0:num_values_x-1
+    for search_y_n = 0:num_values_y-1
+        
+        if (ref_y == 377 && search_y_n == num_values_x-1)
+            disp("oho");
+        end
+        
+        if (search_x_n == num_values_y-1)
+            %disp("oho2");
+        end
+            
         %convert from 1..windowLength to image coordinates
         search_x = ref_x - searchWindowSize(1) + search_x_n * slide_length;
         search_y = ref_y - searchWindowSize(2) + search_y_n * slide_length;
@@ -28,14 +54,14 @@ for search_x_n = 0:searchWindowLengthX-1
         support_ref = single(left_image(...
             ref_x - supportWindowSize(1) : ref_x + supportWindowSize(1), ...
             ref_y - supportWindowSize(2) : ref_y + supportWindowSize(2)));
-
+        
         start_x = search_x;
         start_y = search_y;
         samples_x = [floor(start_x)];
         % each pixel's value is determined by at most 4 others
         % if x value not on pixel grid (not an integer)
         if ~(mod(search_x,1) == 0)
-            samples_x = [samples_x; start_x + 1];
+            samples_x = [samples_x; floor(start_x) + 1];
         end
         %how much of each pixel does the support window cover?
         x_slide = (start_x - floor(start_x));
@@ -44,18 +70,19 @@ for search_x_n = 0:searchWindowLengthX-1
 
         samples_y = [floor(start_y)];
         if ~(mod(start_y,1) == 0)
-            samples_y = [samples_y; start_y + 1];
+            samples_y = [samples_y; floor(start_y) + 1];
         end
         %how much of each pixel does the support window cover?
         y_slide = (start_y - floor(start_y));
         y_ratios = [1-y_slide y_slide];
         
         %make a vector of all pixels to be sampled, along with their weights
+        clear sample_points;
         count = 1;
         for x = 1:size(samples_x,1)
             for y = 1:size(samples_y,1)
                 weight = x_ratios(x) * y_ratios(y); %area in a 1x1 box will add up to 1, so no need to normalise
-                sample_points(count, :, :, :) = [x y weight];
+                sample_points(count, :, :, :) = [samples_x(x) samples_y(y) weight];
                 count = count+1;
             end
         end
@@ -65,7 +92,9 @@ for search_x_n = 0:searchWindowLengthX-1
                 
                 intensity = 0;
                 for e = 1:size(sample_points,1)
-                    intensity = intensity + right_image(sample_points(e, 1) + sup_x, sample_points(e, 2) + sup_y) * sample_points(e, 3);
+                    this_point = [sample_points(e, 1) + sup_x - supportWindowSize(1) sample_points(e, 2) + sup_y - supportWindowSize(2)];
+                    intensity = intensity + right_image(this_point(1), this_point(2)) * sample_points(e, 3);
+                    %intensity = intensity + right_image(sample_points(e, 1) + sup_x - supportWindowSize(1), sample_points(e, 2) + sup_y - supportWindowSize(2)) * sample_points(e, 3);
                 end
                 
                 support_right(sup_x+1, sup_y+1) = single(intensity);
@@ -89,9 +118,9 @@ end
 xcoord = xcoords(ycoord);
 
 % distance from the corresponding point in the reference image
-position = [(start_x + xcoord * slide_length) (start_y + ycoord * slide_length)];
+position = [(ref_x - searchWindowSize(1) + (xcoord-1) * slide_length) (ref_y - searchWindowSize(2) + (ycoord-1) * slide_length)];
 positions = [position; ref_x ref_y];
-match_coords = [ref_x ref_y] + position;
+match_coords = position;
 disparity = pdist(positions, 'euclidean');
 
 
