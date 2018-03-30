@@ -16,7 +16,7 @@ search_size_y = 3;
 support_size_x = 2;
 support_size_y = 2;
 
-slide_length = 0.1;
+slide_length = 1;
 
 refinement_max_iter = 0;
 
