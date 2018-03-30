@@ -15,10 +15,13 @@ waitbar((0.1),f,'Calculating Disparities... ');
     = image_disp(slide_length, support_cmp_name, left_image, right_image, search_x, search_y, supp_x, supp_y);
 
 
-waitbar((0.8),f,'Finishing Disparity Map... ');
+
 if (refinement == 1)
     % refine for smoothness while penalising changes as well
+    waitbar((0.6),f,'Refining Disparity Map... ');
     disparity_map = refine_disp_map(refinement_iterations, disparity_map, xLowerLimit, xUpperLimit, yLowerLimit, yUpperLimit);
 end
+waitbar((0.9),f,'Finishing Disparity Map... ');
+pause(.5)
 close(f);
 
