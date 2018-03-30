@@ -16,7 +16,7 @@ support_size_y = 4;
 
 slide_length = 1;
 
-refinement_max_iter = 2;
+refinement_max_iter = 25;
 
 % compute disparity map
 [disp_map, time, xLowerLimit, xUpperLimit, yLowerLimit, yUpperLimit] ...

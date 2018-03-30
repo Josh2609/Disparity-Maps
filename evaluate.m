@@ -14,14 +14,14 @@ min_truth = min(unique(ground_truth));
 newMin = 0;
 newMax = 255;
 
-scaled_disp_map = zeros(size(disp_map, 1), size(disp_map, 2));
-scaled_ground_truth = scaled_disp_map;
-differences = scaled_disp_map;
+normalised_disp_map = zeros(size(disp_map, 1), size(disp_map, 2));
+normalised_ground_truth = normalised_disp_map;
+differences = normalised_disp_map;
 
 for x = 1:size(disp_map, 1)
     for y = 1:size(disp_map, 2)
-        scaled_disp_map(x,y) = map(disp_map(x,y), min_disp, max_disp, newMin, newMax);
-        scaled_ground_truth(x,y) = map(ground_truth(x,y), min_truth, max_truth, newMin, newMax);
+        normalised_disp_map(x,y) = map(disp_map(x,y), min_disp, max_disp, newMin, newMax);
+        normalised_ground_truth(x,y) = map(ground_truth(x,y), min_truth, max_truth, newMin, newMax);
     end
 end
 
@@ -32,7 +32,7 @@ for x = 1:size(occlusion_mask, 1)
         if (occlusion_mask(x, y) == 0)
             difference = 0;
         else
-            difference = scaled_disp_map(x, y) - scaled_ground_truth(x, y);
+            difference = normalised_disp_map(x, y) - normalised_ground_truth(x, y);
             difference = abs(difference);
             unoccluded_pixel_count = unoccluded_pixel_count + 1;
         end
