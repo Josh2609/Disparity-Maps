@@ -22,7 +22,7 @@ function varargout = DisparityGUI(varargin)
 
 % Edit the above text to modify the response to help DisparityGUI
 
-% Last Modified by GUIDE v2.5 30-Mar-2018 02:28:25
+% Last Modified by GUIDE v2.5 30-Mar-2018 03:15:47
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -63,8 +63,8 @@ guidata(hObject, handles);
 
 global suppX suppY searchX searchY left_file_path right_file_path support_cmp slide_length refinement refinement_iterations
 refinement_iterations = 3;
-suppX = 2;
-suppY = 2;
+suppX = 5;
+suppY = 5;
 searchX = 10;
 searchY = 10;
 slide_length = 1;
@@ -92,8 +92,8 @@ function StartButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global support_cmp left_file_path right_file_path suppX suppY searchX searchY slide_length refinement refinement_iterations
-
 dm = DisparityCalc(slide_length, support_cmp, left_file_path, right_file_path, suppX, suppY, searchX, searchY, refinement, refinement_iterations);
+cla(handles.axes3,'reset')
 axes(handles.axes3);
 imagesc(dm);
 colormap(gray);
@@ -113,6 +113,7 @@ global left_file_path
 [file,path] = uigetfile('*.bmp;*.jpg;*.png');
 left_file_path = [path file];
 left_image = imread(left_file_path);
+cla(handles.axes1,'reset');
 axes(handles.axes1);
 imshow(left_image);
 
@@ -127,6 +128,7 @@ global right_file_path
 [file,path] = uigetfile('*.bmp;*.jpg;*.png');
 right_file_path = [path file];
 right_image = imread(right_file_path);
+cla(handles.axes2,'reset');
 axes(handles.axes2);
 imshow(right_image);
 
@@ -139,11 +141,9 @@ function searchY_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of searchY as text
 %        str2double(get(hObject,'String')) returns contents of searchY as a double
-global searchY
+global searchY searchX
 searchY = str2double(get(hObject,'String'));
-% if searchY > 3
-%     searchY = ((searchY- 1)/2);
-% end
+set(handles.searchWinSize,'string', "" + ((searchX*2)+1) + " * " + ((searchY*2)+1) + "");
 
 
 % --- Executes during object creation, after setting all properties.
@@ -167,11 +167,9 @@ function searchX_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of searchX as text
 %        str2double(get(hObject,'String')) returns contents of searchX as a double
-global searchX
+global searchX searchY
 searchX = str2double(get(hObject,'String'));
-% if searchX > 3
-%     searchX = ((searchX- 1)/2);
-% end
+set(handles.searchWinSize,'string', "" + ((searchX*2)+1) + " * " + ((searchY*2)+1) + "");
 
 
 % --- Executes during object creation, after setting all properties.
@@ -195,11 +193,9 @@ function suppX_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of suppX as text
 %        str2double(get(hObject,'String')) returns contents of suppX as a double
-global suppX
+global suppX suppY
 suppX = str2double(get(hObject,'String'));
-% if suppX > 3
-%     suppX = ((suppX- 1)/2);
-% end
+set(handles.suppWinSize,'string', "" + ((suppX*2)+1) + " * " + ((suppY*2)+1) + "");
 
 
 % --- Executes during object creation, after setting all properties.
@@ -223,11 +219,9 @@ function suppY_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of suppY as text
 %        str2double(get(hObject,'String')) returns contents of suppY as a double
-global suppY
+global suppY suppX
 suppY = str2double(get(hObject,'String'));
-% if suppY > 3
-%     suppY = ((suppY- 1)/2);
-% end
+set(handles.suppWinSize,'string', "" + ((suppX*2)+1) + " * " + ((suppY*2)+1) + "");
 
 
 % --- Executes during object creation, after setting all properties.
@@ -337,7 +331,7 @@ function selectCT_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global support_cmp
-support_cmp = 'support_cmp_CT';
+support_cmp = 'support_cmp_ct';
 
 
 % --- Executes on button press in selectCTSAD.
