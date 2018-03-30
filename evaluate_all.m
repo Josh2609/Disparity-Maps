@@ -27,7 +27,7 @@ support_x_max = 4;
 support_y_min = 4;
 support_y_max = 4;
 
-refinement_max_iter = 0;
+refinement_max_iter = 1;
 slide_length = 1;
 
 methodCount = 100;

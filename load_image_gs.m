@@ -1,11 +1,13 @@
 % load greyscale image
 function image = load_image_gs(path)
 
-image = imread(path);
+[image, cmap] = imread(path);
 
-% Check if images are greyscale and if not, convert them.
-if size(image,3) == 3
-    image = rgb2gray(image);
+for x = 1:size(image, 1)
+    for y = 1:size(image, 2)
+        image(x,y) = floor(255*cmap(image(x,y)+1));
+    end
 end
+
 
 end

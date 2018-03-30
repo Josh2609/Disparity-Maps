@@ -1,11 +1,12 @@
 addpath('./images');
 
 % Specify comparison method
-support_cmp_name = 'support_cmp_meanct';
+support_cmp_name = 'support_cmp_sad';
 
 % Load images
 left_image = load_image_gs('images/scene_l.bmp');
 right_image = load_image_gs('images/scene_r.bmp');
+
 
 search_size_x = 15;
 search_size_y = 2;
@@ -15,7 +16,7 @@ support_size_y = 4;
 
 slide_length = 1;
 
-refinement_max_iter = 0;
+refinement_max_iter = 1;
 
 % compute disparity map
 [disp_map, time, xLowerLimit, xUpperLimit, yLowerLimit, yUpperLimit] ...
