@@ -15,17 +15,17 @@ addpath('./images');
 ground_truth = imread('images/tsukuba_groundtruth.png');
 occlusion_mask = imread('images/tsukuba_occlusion.png');
 
-search_x_min = 3;
-search_x_max = 9;
+search_x_min = 15;
+search_x_max = 15;
 
-search_y_min = 1;
+search_y_min = 2;
 search_y_max = 2;
 
 support_x_min = 3;
-support_x_max = 4;
+support_x_max = 3;
 
 support_y_min = 3;
-support_y_max = 4;
+support_y_max = 3;
 
 refinement_max_iter = 0;
 
@@ -35,8 +35,8 @@ methodCount = 100;
 %times_table = zeros(search_x_max + 1, search_y_max + 1, support_x_max + 1, support_y_max + 1, methodCount);
 
 evaluate1;
-% evaluate2;
-% evaluate3;
+evaluate2;
+evaluate3;
 
 
 

@@ -32,7 +32,7 @@ for x = 1:size(occlusion_mask, 1)
         if (occlusion_mask(x, y) == 0)
             difference = 0;
         else
-            difference = disp_map(x, y) - ground_truth(x, y);
+            difference = scaled_disp_map(x, y) - scaled_ground_truth(x, y);
             difference = abs(difference);
             unoccluded_pixel_count = unoccluded_pixel_count + 1;
         end
