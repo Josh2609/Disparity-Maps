@@ -112,10 +112,10 @@ function LoadImage1_Callback(hObject, eventdata, handles)
 global left_file_path
 [file,path] = uigetfile('*.bmp;*.jpg;*.png');
 left_file_path = [path file];
-left_image = imread(left_file_path);
+[left_image, cmap] = imread(left_file_path);
 cla(handles.axes1,'reset');
 axes(handles.axes1);
-imshow(left_image);
+imshow(left_image, cmap);
 
 
 % --- If Enable == 'on', executes on mouse press in 5 pixel border.
@@ -127,11 +127,10 @@ function LoadImage2_Callback(hObject, eventdata, handles)
 global right_file_path
 [file,path] = uigetfile('*.bmp;*.jpg;*.png');
 right_file_path = [path file];
-right_image = imread(right_file_path);
+[right_image, cmap] = imread(right_file_path);
 cla(handles.axes2,'reset');
 axes(handles.axes2);
-imshow(right_image);
-
+imshow(right_image, cmap);
 
 
 function searchY_Callback(hObject, eventdata, handles)
