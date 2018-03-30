@@ -22,7 +22,7 @@ function varargout = DisparityGUI(varargin)
 
 % Edit the above text to modify the response to help DisparityGUI
 
-% Last Modified by GUIDE v2.5 29-Mar-2018 22:11:38
+% Last Modified by GUIDE v2.5 30-Mar-2018 02:28:25
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -109,8 +109,8 @@ function LoadImage1_Callback(hObject, eventdata, handles)
 % hObject    handle to LoadImage1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[file,path] = uigetfile('*.bmp;*.jpg;*.png');
 global left_file_path
+[file,path] = uigetfile('*.bmp;*.jpg;*.png');
 left_file_path = [path file];
 left_image = imread(left_file_path);
 axes(handles.axes1);
@@ -123,8 +123,8 @@ function LoadImage2_Callback(hObject, eventdata, handles)
 % hObject    handle to LoadImage1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[file,path] = uigetfile('*.bmp;*.jpg;*.png');
 global right_file_path
+[file,path] = uigetfile('*.bmp;*.jpg;*.png');
 right_file_path = [path file];
 right_image = imread(right_file_path);
 axes(handles.axes2);
@@ -248,8 +248,6 @@ function selectSAD_Callback(hObject, eventdata, handles)
 % hObject    handle to selectSAD (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of selectSAD
 global support_cmp
 support_cmp = 'support_cmp_sad';
 
@@ -259,8 +257,6 @@ function selectSSD_Callback(hObject, eventdata, handles)
 % hObject    handle to selectSSD (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of selectSSD
 global support_cmp
 support_cmp = 'support_cmp_ssd';
 
@@ -269,8 +265,6 @@ function selectNSSD_Callback(hObject, eventdata, handles)
 % hObject    handle to selectSSD (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of selectSSD
 global support_cmp
 support_cmp = 'support_cmp_nssd';
 
@@ -302,7 +296,7 @@ function refinementOn_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global refinement
 refinement = 1;
-set(handles.RefineIteration, 'enable', 'on')
+set(handles.RefineIteration, 'enable', 'on');
 
 
 % --- Executes on button press in refinementOff.
@@ -312,7 +306,7 @@ function refinementOff_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global refinement
 refinement = 0;
-set(handles.RefineIteration, 'enable', 'off')
+set(handles.RefineIteration, 'enable', 'off');
 
 
 
@@ -337,33 +331,19 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in togglebutton1.
-function togglebutton1_Callback(hObject, eventdata, handles)
-% hObject    handle to togglebutton1 (see GCBO)
+% --- Executes on button press in selectCT.
+function selectCT_Callback(hObject, eventdata, handles)
+% hObject    handle to selectCT (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global support_cmp
+support_cmp = 'support_cmp_CT';
 
-% Hint: get(hObject,'Value') returns toggle state of togglebutton1
 
-
-
-function edit12_Callback(hObject, eventdata, handles)
-% hObject    handle to edit12 (see GCBO)
+% --- Executes on button press in selectCTSAD.
+function selectCTSAD_Callback(hObject, eventdata, handles)
+% hObject    handle to selectCTSAD (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit12 as text
-%        str2double(get(hObject,'String')) returns contents of edit12 as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit12_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
+global support_cmp
+support_cmp = 'support_cmp_sadct';

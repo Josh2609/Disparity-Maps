@@ -1,5 +1,5 @@
 % computes disparity map for a stereo pair using the named algorithm. (x and y values are swapped internally to match MatLAB's row&column format)
-function [disp_map, time, xLowerLimit, xUpperLimit, yLowerLimit, yUpperLimit] = image_disp(support_cmp_name, left_image, right_image, search_size_x, search_size_y, support_size_x, support_size_y)
+function [disp_map, time, xLowerLimit, xUpperLimit, yLowerLimit, yUpperLimit] = image_disp(slide_length, support_cmp_name, left_image, right_image, search_size_x, search_size_y, support_size_x, support_size_y)
 
 % allocate space for the disparity map
 disp_map = zeros(size(left_image, 1), size(left_image, 2));
@@ -23,7 +23,7 @@ tic
 parfor ref_x = xLowerLimit : xUpperLimit
      for ref_y = yLowerLimit : yUpperLimit   
          
-        [match_coords, minimum, disparity] = pixel_disp_interp(1,ref_x, ref_y,...
+        [match_coords, minimum, disparity] = pixel_disp_interp(slide_length,ref_x, ref_y,...
            searchWindowSize, supportWindowSize,...
            left_image, right_image,...
            support_cmp_name);

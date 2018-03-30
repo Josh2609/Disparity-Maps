@@ -13,11 +13,13 @@ search_size_y = 2;
 support_size_x = 4;
 support_size_y = 4;
 
+slide_length = 1;
+
 refinement_max_iter = 0;
 
 % compute disparity map
 [disp_map, time, xLowerLimit, xUpperLimit, yLowerLimit, yUpperLimit] ...
-    = image_disp(support_cmp_name, left_image, right_image, search_size_x, search_size_y, support_size_x, support_size_y);
+    = image_disp(slide_length, support_cmp_name, left_image, right_image, search_size_x, search_size_y, support_size_x, support_size_y);
 
 % refine for smoothness while penalising changes as well
 refined_disp_map = refine_disp_map(refinement_max_iter, disp_map, xLowerLimit, xUpperLimit, yLowerLimit, yUpperLimit);
