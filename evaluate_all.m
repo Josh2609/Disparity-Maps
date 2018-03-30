@@ -21,11 +21,11 @@ search_x_max = 15;
 search_y_min = 2;
 search_y_max = 2;
 
-support_x_min = 3;
-support_x_max = 3;
+support_x_min = 4;
+support_x_max = 4;
 
-support_y_min = 3;
-support_y_max = 3;
+support_y_min = 4;
+support_y_max = 4;
 
 refinement_max_iter = 0;
 
